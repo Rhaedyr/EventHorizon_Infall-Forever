@@ -1,6 +1,6 @@
 ## Interface: 120100
 ## Title: EventHorizon Infall
-## Notes: Event Horizon for Midnight, cooldown timeline bars driven by CDM
+## Notes: Event Horizon for Midnight & Forever (Mainline 12.x); CDM timeline bars. Forever Interface for 1.60.1 TBD — keeping 120100 until GetBuildInfo confirms
 ## Author: Infall
 ## Version: 1.4.2
 ## IconTexture: Interface\Icons\Spell_animamaw_orb

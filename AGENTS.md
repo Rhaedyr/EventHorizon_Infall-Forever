@@ -4,6 +4,18 @@ This addon targets **WoW: Forever** on Mainline’s Midnight-era UI (TOC `Interf
 
 Do **not** treat this as Classic Era, Cataclysm Classic, or pre-12.0 retail. Prefer Forever / Midnight patterns over “universal” older WoW snippets.
 
+**Forever content version** (e.g. **1.60.1**) is **not** a TOC Interface number. Exact Forever Interface for 1.60.1 is a **TODO** — fill from `/dump select(4, GetBuildInfo())` when known. See `docs/FOREVER_COMPAT_REPORT.md`.
+
+## Skill files (read these first for API posture)
+
+| Skill | Path |
+| --- | --- |
+| Universal Mainline 12.x | [`agent-skills/universal/SKILL.md`](agent-skills/universal/SKILL.md) |
+| Midnight Standard | [`agent-skills/midnight/SKILL.md`](agent-skills/midnight/SKILL.md) |
+| Forever (vs Midnight) | [`agent-skills/forever/SKILL.md`](agent-skills/forever/SKILL.md) |
+
+Cursor mirrors: `.cursor/skills/{universal,midnight,forever}/SKILL.md`. Short always-on rule: `.cursor/rules/forever-addon-api.mdc`.
+
 ## Hard rules
 
 1. **No CLEU combat pipelines.** Do not use `COMBAT_LOG_EVENT_UNFILTERED` or `CombatLogGetCurrentEventInfo`. Forever keeps Midnight’s addon disarmament.
@@ -24,6 +36,7 @@ Do **not** treat this as Classic Era, Cataclysm Classic, or pre-12.0 retail. Pre
 | Per-class data | `ClassConfig/` |
 | Settings UX | `Settings.lua`, `CUSTOMIZATION.md` |
 | Load order / Interface | `EventHorizon_Infall.toc` |
+| Forever compat scan | `docs/FOREVER_COMPAT_REPORT.md` |
 
 ## Done when
 
