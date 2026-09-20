@@ -1,0 +1,25 @@
+---
+description: Prefer Warcraft Forever / Mainline Midnight (12.x) addon APIs over Classic Era or pre-Midnight retail patterns.
+globs: ["**/*.lua", "**/*.toc", "**/*.md"]
+alwaysApply: true
+---
+
+# Forever / Midnight addon API
+
+This repo is a **WoW: Forever** addon on Mainline Midnight-era UI (Interface ~120100). Forever uses the modern Mainline API set (~12.1.5), including secret values and Cooldown Manager — not Classic Era.
+
+## Prefer
+
+- `C_Spell.*`, `C_SpellBook.*`, `C_SpecializationInfo.*`, `C_CooldownViewer.*`, `C_UnitAuras.*`, `C_DurationUtil`, `C_Secrets`
+- Existing helpers: `ns.AuraCompat`, `ns.SpecIndex` / `ns.SpecInfo`, CDM order helpers in `Core.lua`
+- `issecretvalue` guards; Duration objects for cooldown/aura timing
+- Patterns already present in this codebase over general old-client wiki advice
+
+## Avoid
+
+- `COMBAT_LOG_EVENT_UNFILTERED` / `CombatLogGetCurrentEventInfo`
+- Bare pre-12.0 spell/spec APIs when `C_*` equivalents exist
+- Branching Lua on secret combat numbers
+- Dropping in Classic-era EventHorizon or WeakAura combat-log logic
+
+See `AGENTS.md` for full project rules.
