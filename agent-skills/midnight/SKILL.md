@@ -29,7 +29,7 @@ Builds on [`../universal/SKILL.md`](../universal/SKILL.md). **Standard** is Bliz
 | API family | Mainline 12.x | Same family (~12.1.5) |
 | Secrets / AuraContainer / CDM | Yes | Yes (announced) |
 | Content / systems | Retail Midnight | Forever (Camelot) content |
-| TOC Interface | 12xxxx from client | 12xxxx from client — **may differ**; do not copy Classic numbers |
+| TOC Interface | 12xxxx from client | Forever **1.60.1** = **`16001`** (live dump); see forever skill — not Classic |
 
 When a change is Midnight-only (retail systems, midnight-only spells), gate it in data or feature flags — do not assume Forever has every Standard spell or UI panel.
 

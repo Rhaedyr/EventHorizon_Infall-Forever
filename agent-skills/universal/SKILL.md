@@ -29,9 +29,10 @@ Public baseline: Forever shares Mainline’s UI architecture and the vast majori
 
 ## TOC / Interface
 
-- Mainline TOC `## Interface:` values are **12xxxx** (e.g. `120100`), never Classic `1xxxx` / `4xxxx` / `5xxxx`.
-- A game **content** version like Forever **1.60.1** is **not** a TOC Interface number. Do not invent Classic-style Interfaces for Forever.
-- When the exact Interface for a Forever build is unknown, keep a known-good Mainline 12.x value and mark a **TODO** for the user to fill from:
+- **Midnight Standard** TOC `## Interface:` values are **12xxxx** (e.g. `120100`).
+- **Forever 1.60.1** TOC Interface is **`16001`** (confirmed live via `GetBuildInfo()` build 69913). See [`forever/SKILL.md`](../forever/SKILL.md). Do **not** keep `120100` as a Forever placeholder.
+- Forever’s `16001` is **not** Classic Era — same digit pattern, different product. Forever still uses Mainline-family Lua (secrets, CDM, `C_*`).
+- A game **content** version like Forever **1.60.1** is the version string; the TOC Interface comes from `select(4, GetBuildInfo())`. Always prefer a live dump over guessing:
 
 ```lua
 /dump select(4, GetBuildInfo())

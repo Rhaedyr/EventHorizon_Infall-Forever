@@ -1,6 +1,6 @@
 ---
 name: wow-forever
-description: WoW Forever (Camelot) specifics and how they relate to Midnight Standard. Use for Forever-targeted addon work and TOC Interface TODOs.
+description: WoW Forever (Camelot) specifics and how they relate to Midnight Standard. Use for Forever-targeted addon work. Confirmed TOC Interface 16001 for Forever 1.60.1.
 ---
 
 # WoW: Forever (Camelot)
@@ -18,39 +18,43 @@ Blizzard (WoW UI Discord, via [Wowhead](https://www.wowhead.com/news/wow-forever
 
 Implication for addons: a Midnight-ready, CDM + secret-aware codebase is the correct starting point. Classic-era ports are the wrong starting point.
 
+## Confirmed build — Forever 1.60.1
+
+Live client `GetBuildInfo()`:
+
+| Return | Value |
+| --- | --- |
+| `[1]` version | `1.60.1` |
+| `[2]` build | `69913` |
+| `[3]` date | `Sep 17 2026` |
+| `[4]` Interface | **`16001`** |
+
+**TOC requirement:** Forever 1.60.1 addons must use `## Interface: 16001`. Do **not** keep `120100` / other `120xxx` as a Forever placeholder once this dump is known. Lua may still follow Midnight/Mainline patterns; the TOC Interface number is separate and **must** be `16001` for this client.
+
 ## Version naming (do not confuse)
 
 | Label | Meaning | TOC? |
 | --- | --- | --- |
-| Forever **1.60.1** | Forever/Camelot **content / game** version | **No** — not an Interface number |
-| `## Interface: 12xxxx` | Mainline UI addon Interface | **Yes** |
+| Forever **1.60.1** | Forever/Camelot **content / game** version | **No** — not itself the Interface field |
+| `## Interface: **16001**` | Forever 1.60.1 UI addon Interface (confirmed) | **Yes — use this** |
+| Midnight / Standard `12xxxx` | Mainline Standard Interface | **Not** for Forever-only TOCs |
 | Classic `115xx` / `404xx` / `505xx` | Other flavors | **Never** for Forever |
 
-### TODO — Forever Interface for build 1.60.1
+Note: Forever’s Interface **`16001`** sits in a `1xxxx` digit range that also appears on Classic products. That is a **coincidence of numbering**, not a reason to treat Forever as Classic Era. Forever still uses Mainline-family Lua (secrets, CDM, `C_*`). Do **not** advise “avoid Classic-style 16001” for this client — **16001 is correct**.
 
-The exact `## Interface:` integer for Forever **1.60.1** is **unknown** until read from the Forever client. Do **not** invent it. Prefer keeping a known Mainline value (this repo currently uses `120100`) over guessing.
-
-User should supply either:
-
-```lua
-/dump select(4, GetBuildInfo())
-```
-
-or the Interface line from a Forever-shipped Blizzard TOC / AddOns list once the beta client is available.
-
-Optional later: comma-delimited `## Interface: 120100,XXXXXX` **only** if evidence shows Forever reports a different Interface than Standard and dual-load is desired.
+Optional later: comma-delimited `## Interface: 16001,120xxx` **only** if dual-load with Standard is explicitly desired and evidenced.
 
 ## Forever-specific agent checklist
 
 1. Follow universal secret / no-CLEU / `C_*` rules — Forever is not a CLEU sanctuary.
 2. Prefer CDM + `C_UnitAuras` / Duration patterns already used for Midnight.
 3. Mark **uncertain** any hard-coded retail-only enums, Edit Mode magic numbers, or Standard-only systems until verified in Forever.
-4. Do not recommend Classic Interface numbers or `_Vanilla` / `_Cata` TOC suffixes for Forever.
+4. Use TOC Interface **`16001`** for Forever 1.60.1. Do not recommend Classic `_Vanilla` / `_Cata` TOC suffixes, and do not leave `120100` as a Forever placeholder.
 5. Content gaps (missing spells, different talent trees) are **data** issues in `ClassConfig/`, not reasons to drop secret guards.
 
 ## EventHorizon Infall on `forever` branch
 
-- Branch targets Forever while remaining Midnight-API-compatible.
+- Branch targets Forever while remaining Midnight-API-compatible in Lua.
 - Compat scan report: `docs/FOREVER_COMPAT_REPORT.md`
 - Cursor rule (short): `.cursor/rules/forever-addon-api.mdc`
 - Project agent summary: `AGENTS.md`

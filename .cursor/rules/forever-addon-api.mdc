@@ -1,12 +1,12 @@
 ---
-description: Prefer Warcraft Forever / Mainline Midnight (12.x) addon APIs over Classic Era or pre-Midnight retail patterns.
+description: Prefer Warcraft Forever / Mainline Midnight addon APIs over Classic Era or pre-Midnight retail patterns. Forever 1.60.1 TOC Interface is 16001.
 globs: ["**/*.lua", "**/*.toc", "**/*.md"]
 alwaysApply: true
 ---
 
 # Forever / Midnight addon API
 
-This repo is a **WoW: Forever** addon on Mainline Midnight-era UI (Interface ~120100). Forever uses the modern Mainline API set (~12.1.5), including secret values and Cooldown Manager — not Classic Era.
+This repo is a **WoW: Forever** addon (content **1.60.1**, build **69913**, TOC Interface **`16001`**). Lua uses the modern Mainline API set (~12.1.5), including secret values and Cooldown Manager — not Classic Era. Do **not** keep `120100` as a Forever TOC placeholder.
 
 ## Prefer
 
@@ -14,6 +14,7 @@ This repo is a **WoW: Forever** addon on Mainline Midnight-era UI (Interface ~12
 - Existing helpers: `ns.AuraCompat`, `ns.SpecIndex` / `ns.SpecInfo`, CDM order helpers in `Core.lua`
 - `issecretvalue` guards; Duration objects for cooldown/aura timing
 - Patterns already present in this codebase over general old-client wiki advice
+- `## Interface: 16001` for Forever 1.60.1 TOCs
 
 ## Avoid
 
@@ -21,5 +22,6 @@ This repo is a **WoW: Forever** addon on Mainline Midnight-era UI (Interface ~12
 - Bare pre-12.0 spell/spec APIs when `C_*` equivalents exist
 - Branching Lua on secret combat numbers
 - Dropping in Classic-era EventHorizon or WeakAura combat-log logic
+- Claiming Forever TOC must be `120xxx`, or “avoid Classic-style 16001” for this client
 
 See `AGENTS.md` for full project rules.
