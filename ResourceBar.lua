@@ -45,6 +45,20 @@ local function ResetRegenObservation()
 end
 ns.ResetRegenObservation = ResetRegenObservation
 
+-- Last non-secret UnitPower per type. Display sinks (SetValue/SetText) keep this
+-- when Forever/Midnight secrets the live reading, matching ObservePowerTick.
+local lastPowerByType = {}
+
+local function ReadableUnitPower(powerType)
+    if powerType == nil then return nil end
+    local ok, value = pcall(UnitPower, "player", powerType)
+    if not ok or type(value) ~= "number" or issecretvalue(value) then
+        return lastPowerByType[powerType]
+    end
+    lastPowerByType[powerType] = value
+    return value
+end
+
 local function ObservePowerTick()
     if not currentPowerType then return end
     local ok, value = pcall(UnitPower, "player", currentPowerType)
@@ -300,26 +314,29 @@ local channelPredActive = false
 UpdateResourceBar = function()
     if not resourceBar or currentPowerType == nil then return end
     resourceBar:SetMinMaxValues(0, currentPowerMax)
-    resourceBar:SetValue(UnitPower("player", currentPowerType))
+    -- Forever: secret UnitPower must not reach SetValue/SetText; keep last readable.
+    local power = ReadableUnitPower(currentPowerType)
+    if power == nil then return end
+    resourceBar:SetValue(power)
 
     -- Sync frozen ref bar when not channeling
     if predictionRefBar and not channelPredActive then
         predictionRefBar:SetMinMaxValues(0, currentPowerMax)
-        predictionRefBar:SetValue(UnitPower("player", currentPowerType))
+        predictionRefBar:SetValue(power)
     end
 
     if valueText and valueText:IsShown() then
-        valueText:SetText(UnitPower("player", currentPowerType))
+        valueText:SetText(power)
     end
 
 end
 
 local function UpdateMaxPower()
     if currentPowerType == nil then return end
-    local maxP = UnitPowerMax("player", currentPowerType)
-    if issecretvalue(maxP) then
+    local okMax, maxP = pcall(UnitPowerMax, "player", currentPowerType)
+    if not okMax or maxP == nil or issecretvalue(maxP) then
         -- Keyed by type, so a form swap cannot leave the new power reading
-        -- against the old one's max.
+        -- against the old one's max. Forever: pcall + secret skip like power display.
         maxP = maxPowerByType[currentPowerType]
         if maxP == nil then return end
     else
@@ -420,7 +437,12 @@ UpdatePrediction = function()
     if isChannel and generation > 0 and cost == 0 and predictionRefBar then
         if not channelPredActive then
             predictionRefBar:SetMinMaxValues(0, currentPowerMax)
-            predictionRefBar:SetValue(UnitPower("player", currentPowerType))
+            local power = ReadableUnitPower(currentPowerType)
+            if power == nil then
+                ClearPrediction()
+                return
+            end
+            predictionRefBar:SetValue(power)
             local totalGen = generation + GetRegenRate() * totalDurS
             local totalGenPx = totalGen / currentPowerMax * barWidth
             local predRefFillTex = predictionRefBar:GetStatusBarTexture()

@@ -3385,7 +3385,9 @@ local function JudgePress()
     end
     local late = ns._pmMissed and not inWindow or false
     -- Out of combat there is no window to have missed.
-    if not UnitAffectingCombat("player") then
+    -- Forever: pcall + reject secret/nil so a restricted boolean cannot clear miss state.
+    local okCombat, inCombat = pcall(UnitAffectingCombat, "player")
+    if okCombat and inCombat ~= nil and not (issecretvalue and issecretvalue(inCombat)) and not inCombat then
         late, ns._pmMissed = false, false
     end
     ns.PressMarks_Push(late)
@@ -4719,8 +4721,10 @@ local function ForceViewersAlways()
     local CDM_SYSTEM = Enum.EditModeSystem and Enum.EditModeSystem.CooldownViewer
     if not CDM_SYSTEM then return false end
 
-    local VIS_SETTING = 6  -- EditModeCooldownViewerSetting.VisibleSetting
-    local VIS_ALWAYS = 0   -- CooldownViewerVisibleSetting.Always
+    -- Prefer Enum.* when present (Forever confirms VisibleSetting=6, Always=0);
+    -- keep numeric fallbacks for older dumps / missing enum tables.
+    local VIS_SETTING = (Enum.EditModeCooldownViewerSetting and Enum.EditModeCooldownViewerSetting.VisibleSetting) or 6
+    local VIS_ALWAYS = (Enum.CooldownViewerVisibleSetting and Enum.CooldownViewerVisibleSetting.Always) or 0
 
     local changed = false
     for _, systemInfo in ipairs(activeLayout.systems) do
@@ -6546,7 +6550,13 @@ function EHF.UpdateAllSIPips()
                 -- Nothing to read: the row is not drawing.
             elseif config.indicatorType == "power" and config.powerType then
                 local ok, power = pcall(UnitPower, "player", config.powerType)
-                if ok then applications = power end
+                -- Forever: do not feed secret power into pip SetValue; keep prior count.
+                if ok and power ~= nil and not (issecretvalue and issecretvalue(power)) then
+                    applications = power
+                    rowData._lastPowerApps = power
+                else
+                    applications = rowData._lastPowerApps or 0
+                end
             elseif config.cooldownID then
                 local buffFrame = ResolveBuffFrame(config.cooldownID)
                 if buffFrame and buffFrame.auraInstanceID ~= nil then
